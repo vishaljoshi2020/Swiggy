@@ -1,0 +1,15 @@
+# Dependency directories
+node_modules/
+
+# Parcel cache
+.parcel-cache/
+
+# Compiled output directory
+dist/
+
+# VSCode settings
+.vscode/
+
+# Optional: Add this if you have OS-specific files
+.DS_Store
+Thumbs.db

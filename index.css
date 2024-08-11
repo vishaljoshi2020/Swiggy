@@ -1,0 +1,141 @@
+/* .header {
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid black;
+  border-radius: 16px;
+}
+
+.logo {
+  margin: 10px 10px;
+  width: 100px;
+  height: 100px;
+}
+
+.nav-items > ul {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  list-style-type: none;
+}
+.nav-items > ul > li {
+  margin: 15px 30px;
+}
+
+.res-card {
+  padding: 5px;
+  width: 300px;
+  height: 350px;
+}
+.res-card:hover {
+  cursor: pointer;
+  border: 1px solid black;
+}
+.res-card > img {
+  width: 300px;
+  height: 200px;
+}
+
+.search {
+  padding: 10px;
+} */
+
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa; /* Light background to complement the black logo */
+  color: black;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+  padding-right: 80px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+}
+
+.nav-items ul {
+  display: flex;
+  gap: 60px;
+}
+
+.nav-items li {
+  cursor: pointer;
+  font-weight: bold;
+  color: #a9a9a9;
+  /* Make the text bold for better readability */
+}
+
+.nav-items li:hover {
+  color: orange;
+}
+
+/* Body Styles */
+.body {
+  padding: 20px;
+}
+
+.search {
+  margin-bottom: 20px;
+}
+
+.res-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* Restaurant Card Styles */
+.res-card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.res-card:hover {
+  cursor: pointer;
+  transform: translateY(-5px);
+}
+
+.res-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.res-card h3 {
+  margin: 10px 0;
+}
+
+.res-card h4 {
+  color: #555;
+  margin-bottom: 10px;
+}
+
