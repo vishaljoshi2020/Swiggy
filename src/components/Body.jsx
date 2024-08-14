@@ -13,7 +13,7 @@ const Body = () => {
 
   const fetchData = async () => {
     const data = await fetch(
-      " "
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=15.367619245564901&lng=75.12722242623568&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
 
@@ -25,30 +25,6 @@ const Body = () => {
       json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants || []
     );
-  };
-
-  const fetchExtra = async () => {
-    console.log("Fetching extra");
-    const response = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/update",
-      {
-        method: "POST", // Use the POST method as required by the API
-        headers: {
-          "Content-Type": "application/json",
-          // Include any other necessary headers, such as authentication tokens
-        },
-        body: JSON.stringify({
-          // Only include parameters required by the API
-          offset: 0, // Example parameter for pagination (starting point)
-          limit: 20, // Example parameter for the number of results
-          // Exclude latitude and longitude if they are not needed
-          // Add any other required parameters as per the API documentation
-        }),
-      }
-    );
-
-    const extraData = await response.json();
-    console.log(extraData);
   };
 
   return listofRestaurants.length === 0 ? (
