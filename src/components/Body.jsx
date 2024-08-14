@@ -12,26 +12,43 @@ const Body = () => {
   }, []);
 
   const fetchData = async () => {
-    try {
-      const data = await fetch(
-        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=15.367619245564901&lng=75.12722242623568&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-      );
-      const json = await data.json();
-      const restaurants =
-        json.data.cards[1].card.card.gridElements.infoWithStyle.restaurants.map(
-          (restaurant, index) => ({
-            name: restaurant.info.name,
-            cuisines: restaurant.info.cuisines,
-            avgRating: restaurant.info.avgRating,
-            image: resImages[index % resImages.length].image, // Assigning the image from resImages array
-          })
-        );
+    const data = await fetch(
+      " "
+    );
+    const json = await data.json();
 
-      setlistofRestaurants(restaurants);
-      setfilteredRestaurants(restaurants);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    setlistofRestaurants(
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants || []
+    );
+    setfilteredRestaurants(
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants || []
+    );
+  };
+
+  const fetchExtra = async () => {
+    console.log("Fetching extra");
+    const response = await fetch(
+      "https://www.swiggy.com/dapi/restaurants/list/update",
+      {
+        method: "POST", // Use the POST method as required by the API
+        headers: {
+          "Content-Type": "application/json",
+          // Include any other necessary headers, such as authentication tokens
+        },
+        body: JSON.stringify({
+          // Only include parameters required by the API
+          offset: 0, // Example parameter for pagination (starting point)
+          limit: 20, // Example parameter for the number of results
+          // Exclude latitude and longitude if they are not needed
+          // Add any other required parameters as per the API documentation
+        }),
+      }
+    );
+
+    const extraData = await response.json();
+    console.log(extraData);
   };
 
   return listofRestaurants.length === 0 ? (
@@ -51,7 +68,7 @@ const Body = () => {
           <button
             onClick={() => {
               const filteredList = listofRestaurants.filter((item) => {
-                return item.name
+                return item.info.name
                   .toLowerCase()
                   .includes(searchText.toLowerCase());
               });
@@ -64,8 +81,8 @@ const Body = () => {
           className="filter-btn"
           onClick={() => {
             const filteredList = listofRestaurants
-              .filter((res) => res.avgRating > 4.3)
-              .sort((a, b) => b.avgRating - a.avgRating);
+              .filter((res) => res.info.avgRating > 4.3)
+              .sort((a, b) => b.info.avgRating - a.info.avgRating);
             setfilteredRestaurants(filteredList);
           }}>
           Top rated btn{" "}
@@ -73,7 +90,10 @@ const Body = () => {
       </div>
       <div className="res-container">
         {filteredRestaurants.map((Restaurant, index) => {
-          return <RestaurantCard key={index} resData={Restaurant} />;
+          // console.log(Restaurant);
+          return (
+            <RestaurantCard key={Restaurant.info.id} resData={Restaurant} />
+          );
         })}
       </div>
     </div>
