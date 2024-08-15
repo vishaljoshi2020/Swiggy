@@ -7,13 +7,16 @@ const Body = () => {
   const [listofRestaurants, setlistofRestaurants] = useState([]);
   const [searchText, setsearchText] = useState("");
   const [filteredRestaurants, setfilteredRestaurants] = useState([]);
+
+  // if no dependecy array then it will render every time
+  // if we intilize with empty array only once
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=15.367619245564901&lng=75.12722242623568&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9352403&lng=77.624532&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
 
