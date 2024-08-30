@@ -1,22 +1,12 @@
-import { useEffect, useState } from "react";
-import Shimmer from "./shimmer";
+import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
-import { MENU_URL } from "../utils/constants";
-
+import { useState } from "react";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
+import RestaurantCategory from "./RestaurantCategory";
 const RestaurantMenu = () => {
-  const [resInfo, setResInfo] = useState(null);
-
   const { resId } = useParams();
-  useEffect(() => {
-    fetchMenu();
-  }, []);
-
-  const fetchMenu = async () => {
-    const data = await fetch(MENU_URL + resId);
-    const json = await data.json();
-    setResInfo(json);
-  };
-
+  const resInfo = useRestaurantMenu(resId);
+  const [showIndex, setShowIndex] = useState(null);
   if (resInfo === null) {
     return <Shimmer />;
   }
@@ -24,30 +14,33 @@ const RestaurantMenu = () => {
   const { name, cuisines, costForTwoMessage } =
     resInfo?.data?.cards[2]?.card?.card?.info;
 
-  let itemCards =
+  const itemCards =
     resInfo?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card
       ?.card?.itemCards;
-      
+
+  const categories =
+    resInfo?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (card) =>
+        card.card.card["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+
+  // console.log(categories);
   return (
-    <div className="menu">
-      <h3>{name}</h3>
-      <h3>{cuisines.join(" , ")}</h3>
-      <h3>{costForTwoMessage}</h3>
-      <h1>Menu</h1>
-      <ul>
-        {itemCards.map((item) => {
-          return (
-            <li key={item.card.info.id}>
-              {item.card.info.name} - {"Rs "}
-              {item.card.info.price / 100}
-            </li>
-          );
-        })}
-      </ul>
+    <div className="text-center bg-white p-6 rounded-lg shadow-2xl w-3/4 ml-auto mr-auto">
+      <h1 className="font-bold text-4xl text-black mb-4">{name}</h1>
+      <h2 className="text-2xl text-gray-700 mb-2">{cuisines.join(", ")}</h2>
+      <h3 className="text-lg text-gray-600">{costForTwoMessage}</h3>
+      {categories.map((category, index) => (
+        <RestaurantCategory
+          data={category.card.card}
+          key={category.card.card.title}
+          showItems={index === showIndex ? true : false}
+          setShowIndex={() => setShowIndex(index)}
+        />
+      ))}
     </div>
   );
 };
 
 export default RestaurantMenu;
-// 103789 - star bucks
-//  376660 - kanti

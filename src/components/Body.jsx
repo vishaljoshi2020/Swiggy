@@ -1,16 +1,15 @@
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { highRatingLabel } from "./RestaurantCard";
 import resImages from "../utils/mockData"; // Make sure mockData contains the resImages array
 import { useEffect, useState } from "react";
-import Shimmer from "./shimmer";
+import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const [listofRestaurants, setlistofRestaurants] = useState([]);
   const [searchText, setsearchText] = useState("");
   const [filteredRestaurants, setfilteredRestaurants] = useState([]);
-
-  // if no dependecy array then it will render every time
-  // if we intilize with empty array only once
+  const HighRating = highRatingLabel(RestaurantCard);
   useEffect(() => {
     fetchData();
   }, []);
@@ -31,12 +30,17 @@ const Body = () => {
     );
   };
 
+  const isOnline = useOnlineStatus();
+  if (isOnline === false) {
+    return <h1>Please check your internet connection</h1>;
+  }
+
   return listofRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex flex-col sm:flex-row items-center justify-between p-4 ">
+        <div className="search flex items-center space-x-2 mb-4 sm:mb-0">
           <input
             type="search"
             placeholder="Search..."
@@ -44,6 +48,7 @@ const Body = () => {
             onChange={(e) => {
               setsearchText(e.target.value);
             }}
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={() => {
@@ -53,28 +58,35 @@ const Body = () => {
                   .includes(searchText.toLowerCase());
               });
               setfilteredRestaurants(filteredList);
-            }}>
+            }}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-200">
             Search
           </button>
         </div>
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredList = listofRestaurants
-              .filter((res) => res.info.avgRating > 4.3)
-              .sort((a, b) => b.info.avgRating - a.info.avgRating);
-            setfilteredRestaurants(filteredList);
-          }}>
-          Top rated btn{" "}
-        </button>
+        <div>
+          <button
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-200"
+            onClick={() => {
+              const filteredList = listofRestaurants
+                .filter((res) => res.info.avgRating > 4.3)
+                .sort((a, b) => b.info.avgRating - a.info.avgRating);
+              setfilteredRestaurants(filteredList);
+            }}>
+            Top Rated
+          </button>
+        </div>
       </div>
-      <div className="res-container">
-        {filteredRestaurants.map((Restaurant, index) => {
+      <div className="res-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+        {filteredRestaurants.map((Restaurant) => {
           return (
             <Link
               key={Restaurant.info.id}
               to={"/restaurants/" + Restaurant.info.id}>
-              <RestaurantCard resData={Restaurant} />
+              {Restaurant.info.avgRating > 4.3 ? (
+                <HighRating resData={Restaurant} />
+              ) : (
+                <RestaurantCard resData={Restaurant} />
+              )}
             </Link>
           );
         })}
@@ -85,6 +97,10 @@ const Body = () => {
 
 export default Body;
 
-// const arr = useState(resList);
-// const listofRestaurants = arr[0];  -- > the above code is just array destrucaring
-// const setlistofRestaurants = arr[1];
+// {
+//   Restaurant.info.avgRating > 4.5 ? (
+//     <HighRating resData={Restaurant} />
+//   ) : (
+//     <RestaurantCard resData={Restaurant} />
+//   );
+// }
